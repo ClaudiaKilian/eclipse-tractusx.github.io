@@ -27,12 +27,13 @@ its way into the IDSA and international standardization bodies.
 ## Catena X Standard Library
 
 The other guiding documentation is the [Catena X Standard Library](https://catena-x.net/en/standard-library).
-In particular, Framework Agreement CX-0018 describes the Eclipse Dataspace Connector, the reference implementation of the Connector Kit.
+In particular, Dataspace Connectivity CX-0018 describes a Dataspace Connector.
 
 ## Notice
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
 
 - SPDX-License-Identifier: CC-BY-4.0
-- SPDX-FileCopyrightText: 2023 Contributors of the Eclipse Foundation
-- Source URL: [https://github.com/eclipse-tractusx/tractusx-edc](https://github.com/eclipse-tractusx/tractusx-edc)
+- SPDX-FileCopyrightText: 2024 Contributors of the Eclipse Foundation
+- Source
+  URL: [https://github.com/eclipse-tractusx/eclipse-tractusx.github.io](https://github.com/eclipse-tractusx/eclipse-tractusx.github.io)

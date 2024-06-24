@@ -6,19 +6,14 @@
 
 All notable changes to this Kit will be documented in this file.
 
-## [3.0.0] - unreleased
+## [3.0.0] - 2024-06-07
 
-<h3>Added</h3>
+- Replace use case specific FrameworkAgreement rightOperand with the new, consolidated DataExchangeGovernance released with 2408
 
-- ./.
+## [2.1.0] - 2024-05-29
 
-<h3>Changed</h3>
-
-- Changed banner image file location and converted .png image to .svg
-
-<h3>Removed</h3>
-
-- ./.
+- Added new page on policies in general
+- Added new page on policies in Catena-X
 
 ## [2.0.0] - 2024-02-01
 
@@ -76,3 +71,12 @@ All notable changes to this Kit will be documented in this file.
 <h3>Removed</h3>
 
 - ./.
+
+## Notice
+
+This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
+
+- SPDX-License-Identifier: CC-BY-4.0
+- SPDX-FileCopyrightText: 2024 Contributors of the Eclipse Foundation
+- Source
+  URL: [https://github.com/eclipse-tractusx/eclipse-tractusx.github.io](https://github.com/eclipse-tractusx/eclipse-tractusx.github.io)

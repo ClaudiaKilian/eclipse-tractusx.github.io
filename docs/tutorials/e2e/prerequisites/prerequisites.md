@@ -9,7 +9,7 @@ The components and tools that are described here are to be understood as a propo
 
 :::info
 
-You can either complete the tutorial in a cloud space (e.g. AWS or Azure) or locally. If you choose to run the tutorial locally, make sure that your machine fulfils the minimal performance requirements.
+You can either complete the tutorial in a cloud space (e.g. AWS or Azure) or locally. If you choose to run the tutorial locally, make sure that your machine fullfils the minimal performance requirements.
 
 :::
 
@@ -30,7 +30,7 @@ As mentioned in the introduction, no preliminary knowledge about Catena-X is req
 
 The tutorial is designed to be used in cloud environments, such as AWS, Google or Azure. If you intend to build your own local environment independently of Cloud based offers, you may use this tutorial as well. In this case you need to ensure, you have the right technical software stack installed, see below.
 
-## Setting up your own environment on local systems
+## Preparing your own environment on local systems
 
 In case you want to install Tractus-X components or [Kits] directly on your local system you need the following:
 
@@ -39,6 +39,7 @@ In case you want to install Tractus-X components or [Kits] directly on your loca
 - Your local system should run a Linux Version (Debian or Ubuntu 22.04 or higher are recommended)
 - You need super user privileges (either root access or the right to use sudo)
 - The above tools should be installed (Docker, Kubernetes, Kubectl, Minikube, Helm and Browser, X-Environment)
+- To enable users to run the tutorial after you ave installed the required environment setup the environment as described in the last section.
 
 ### Access to the Internet
 
@@ -54,7 +55,7 @@ You may need the support of your local IT department. Once you are confident to 
 
 ### URL Whitelist
 
-#### Specific URLs​, required for [MXD]
+#### Specific URLs​, required for [TXD]
 
 ```bash
 .download.docker.com​
@@ -108,7 +109,7 @@ The above list is currently a candidate for changes, especially as long as the u
 
 #### https (443)
 
-You will need https (port 443) as open port for getting access to the above repositories. If you do not have direct access from your system, you most likely work in an environment which is using proxy forwarding for https. An easy way to configure your system to use the proxy server is by setting the envionment variabale "https_proxy". For example with the command below (bash), if the port 8080 is used for the forwarding:
+You will need https (port 443) as open port for getting access to the above repositories. If you do not have direct access from your system, you most likely work in an environment which is using proxy forwarding for https. An easy way to configure your system to use the proxy server is by setting the environment variable "https_proxy". For example with the command below (bash), if the port 8080 is used for the forwarding:
 
 ```bash
 export https_proxy=http://[proxy-web-or-IP-address]:8080
@@ -122,7 +123,7 @@ export https_proxy=http://[username]:[password]@ [proxy-web-or-IP-address]:[port
 
 :::tip
 
-The above URLs then will be passed only if your proxy server is configured to forward the above whitelist of URLs. To ensure your setting is permant, you may want to add the above command in your .bashrc or /etc/environment. Further you can configure apt to use the proxy by entering the following into the configuration file /etc/apt/apt.conf:
+The above URLs then will be passed only if your proxy server is configured to forward the above whitelist of URLs. To ensure your setting is persisted, you may want to add the above command in your .bashrc or /etc/environment. Further you can configure apt to use the proxy by entering the following into the configuration file /etc/apt/apt.conf:
 
 ```bash
 Acquire::https::Proxy "http://[username]:[password]@ [proxy-web-or-IP-address]:[port-number]";
@@ -142,7 +143,7 @@ The port http (80) will not be used in production, but for the tutorial it will,
 
 #### ssh (22)
 
-For the [MXD], which is running locally, you only need secure shell access, which means port 22 should be open.
+For the [TXD], which is running locally, you only need secure shell access, which means port 22 should be open.
 
 #### Further ports
 
@@ -150,23 +151,49 @@ Opening further ports is not required for the tutorial, as the setup is designed
 
 ### Install the basic tools (on Ubuntu 22.x and higher)
 
-Within this section we briefly describe how to install the required tools on an Ubuntu system. We have tested this on 22.04.3 LTS (GNU/Linux 5.15.0-86-generic x86_64). Please check the online availabe documentation for further details.
+Within this section we briefly describe how to install the required tools on an Ubuntu system. We have tested this on 22.04.3 LTS (GNU/Linux 5.15.0-86-generic x86_64). Please check the online available documentation for further details.
 
 #### Install docker
+
+Ensure that you are up to date with your release (for Ubuntu we use atp, which needs to run with root privileges):
 
 ```bash
 sudo apt update && sudo apt upgrade
 ```
+
+Now install docker ...
 
 ```bash
 sudo apt install docker.io
 ```
 
+:::note
+
+The user group docker should be created, check if it exists.
+
+```bash
+grep docker /etc/group
+```
+
+Response should be:
+
+```bash
+docker:x:120:
+```
+
+You need the user group later, to assign your user.
+
+:::
+
 #### Install kubernetes
+
+As before, ensure you have the latest versions for your release.
 
 ```bash
 sudo apt update && sudo apt upgrade
 ```
+
+and the install kubernetes
 
 ```bash
 sudo apt install kubernetes
@@ -174,15 +201,22 @@ sudo apt install kubernetes
 
 #### Install kubectl
 
+kubectl will be installed with snap, we need to use snap security policy "classic" instead of the default policy "strict" to allow snap full access to the system.
+
 ```bash
 sudo snap install kubectl --classic
 ```
 
-Occasionally snap will fail with an error message "Access forbidden", alternativly you may try to install Kubectl using the native pakage as follows. Please check <https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/> for further information.
+::: note
+
+Occasionally snap will fail with an error message "Access forbidden", alternatively you may try to install Kubectl using the native package as follows. Please check <https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/> for further information.
+
+:::
+
+Now we install a fake transitory package. This APT transport supports access to repositories through the HTTP Secure protocol (HTTPS), often known as HTTP over TLS. It is important to note that transport is never called directly by a user but is instead used by APT tools based on user settings. That's exactly what we are going in the following steps:
 
 ```bash
 sudo apt-get update
-# apt-transport-https may be a dummy package; if so, you can skip that package
 sudo apt-get install -y apt-transport-https ca-certificates curl
 ```
 
@@ -219,35 +253,32 @@ echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.
 sudo chmod 644 /etc/apt/sources.list.d/kubernetes.list   # helps tools such as command-not-found to work correctly
 ```
 
-Update apt package index, then install kubectl:
-
-```bash
-sudo apt-get update
-sudo apt-get install -y kubectl
-```
-
-::: Note
-To upgrade kubectl to another minor release, you'll need to bump the version in /etc/apt/sources.list.d/kubernetes.list before running apt-get update and apt-get upgrade.
-:::
-
 Check that kubectl is properly configured by getting the cluster state:
 
 ```bash
 kubectl cluster-info
 ```
 
-#### Install Minkube
+#### Install Minikube
 
-To install minikube just download the executable from the reposotory. (Please check also <https://kubernetes.io/de/docs/tasks/tools/install-minikube/>)
+To install minikube just download the executable from the repository. (Please check also <https://kubernetes.io/de/docs/tasks/tools/install-minikube/>)
 
 ```bash
 curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 \
 && chmod +x minikube
 ```
 
+The chmod command is used to ensure minikube is executable. If you want other users to have access, you should copy the executable to /usr/bin/ or another comparable location which is used by all users. Ensure that all members of the group "docker" have access.
+
+```bash
+sudo cp ./minikube /usr/bin
+chgrp docker /usr/bin/minikube
+chmod 750 /usr/bin/minikube
+```
+
 #### Install helm
 
-helm will be installed with snap.
+We will need Umbrella Helm Charts for the deployment of the tutorial Catena-X environment, teh required tool helm will be installed with snap.
 
 ::: note
 
@@ -264,26 +295,20 @@ sudo snap install helm --classic
 
 :::note
 
-If not already installed, install xterm and a webbroser like firefox or google-chrome, you also may need to install an x-environment (xterm).
+If not already installed, install a X11 environment (xterm) and a web browser  like firefox or google-chrome.
 
 :::
 
-Install xterm with apt.
+To install and configure the X11 environment use apt.
 
 ```bash
 sudo apt install xterm
 ```
 
-Check if you can access your system by using
+Ensure that the X11 forwarding is working for ssh -X, add to your .bashrc
 
 ```bash
-ssh -X <your system>
-```
-
-To enusre that the X11forwaring is working for ssh -X, add to your .bashrc
-
-```bash
-# ensure google-chrome and other garphic apps find the X-Authorisation file
+# ensure google-chrome and other graphic apps find the X-Authorisation file
 export XAUTHORITY=$HOME/.Xauthority
 ```
 
@@ -294,9 +319,23 @@ X11Forwarding yes
 X11UseLocalhost yes
 ```
 
-Then you should be able to run xterm and the webrowser locally to open the links given later in the tutorial.
+Check if you can access your system by using for a remote location (or you may also use your system, but do not use localhost as system name)
 
-If you want to install google-chrome, do as follows, you may use any other Browser. Download the latest Google Chrome Debian package via the following command:
+```bash
+ssh -X <your username>@<your systemname>
+```
+
+after having logged in enter
+
+```bash
+xterm &
+```
+
+and a new window should appear on your screen. If not ensure that you system is enabled to serve as X server. You may also need to investigate how the environment variable DISPLAY is set.
+
+Then you should be able to run xterm and the web browser locally to open the links given later in the tutorial.
+
+If you want to install google-chrome, do as follows, you may use any other browser. We prefer google-chrome as it works easier in the combination of using ssh with X forwarding. Download the latest Google Chrome Debian package via the following command:
 
 ```bash
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -316,15 +355,45 @@ sudo apt-get install -f
 
 #### Install insomnia
 
-If you want a powerful API client that simplifies the process of building, debugging, and testing APIs, you may want to install Insomnia. (An other alternativ ist Postmann). However for the tutorial we currently do not need an API client, as we will use curl. But if you want you can just install Insomnia as follows:
+If you want a powerful API client that simplifies the process of building, debugging, and testing APIs, you may want to install Insomnia. (Another alternative is Postmann). However for the tutorial we currently do not need an API client, as we will use curl. But if you want you can just install Insomnia as follows:
 
 ```bash
 sudo apt-get update
 sudo apt-get install insomnia
 ```
 
+### Setup a user environment for running the tutorial with a minimum set of privileges
+
+You do not need full system access to proceed with the following steps of tutorial (even not for the deployment). Further you may allow several users to deploy their environment at the same time on the same system. But there are a few critical aspects, you need to consider. But first we begin with setting up the appropriate permissions for a user.
+
+:::note
+
+We use as example the username [tx01].
+
+:::
+
+The user tx01 needs the following permissions to be able to successfully complete the tutorial.
+
+- if has to be a member of the group docker.
+- He needs write access to /etc/hosts
+So we run the following commands, assuming the user already exists:
+
+```bash
+sudo addusr tx01 docker               # adds the user to the group docker
+sudo chgrp docker /etc/hosts          # change the group permission from root to docker
+sudo chmod 664 /etc/hosts             # This allow now our user tx01 to edit /etc/hosts
+```
+
+You should brief your user regarding their responsibility when they are editing /etc/hosts.
+
+:::Warning
+
+Users like tx01 with the above permissions can start minikube clusters, which will bring up kubernetes and Umbrella helm charts. By sharing the permission via the group docker, they are also able to disturb clusters and services of another user within the same group docker. Therefore, it is important that they choose individual names for their minikube profiles and Umbrella namespaces. Further they should avoid any option like "--all". See also additional hints in the next chapter "deploy".
+
+:::
+
 :::info
 
-Your enviroment for the tutorial starting with chapter "deploy" should be ready.
+Your environment for the tutorial starting with chapter "deploy" should be ready.
 
 :::

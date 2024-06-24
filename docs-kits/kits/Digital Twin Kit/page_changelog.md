@@ -15,11 +15,12 @@ All notable changes to this Kit will be documented in this file.
 
 ### Added
 
-- ./.
-
 ### Changed
 
 - Changed banner image file location and converted .png image to .svg
+- Adopted the changes to R24-05. Breaking changes:
+  - replacing the property `"asset:prop:type": "data.core.digitalTwinRegistry` with `"http://purl.org/dc/terms/type":"https://w3id.org/catenax/taxonomy#DigitalTwinRegistry`
+- Corrected multiple minor inconsistencies and feature requests
 
 ### Removed
 
@@ -91,5 +92,5 @@ All notable changes to this Kit will be documented in this file.
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
 
 - SPDX-License-Identifier: CC-BY-4.0
-- SPDX-FileCopyrightText: 2023 Contributors of the Eclipse Foundation
-- Source URL: [https://github.com/eclipse-tractusx/tractusx-edc](https://github.com/eclipse-tractusx/tractusx-edc)
+- SPDX-FileCopyrightText: 2023, 2024 Contributors of the Eclipse Foundation
+- Source URL: [https://github.com/eclipse-tractusx/eclipse-tractusx.github.io](https://github.com/eclipse-tractusx/eclipse-tractusx.github.io)
